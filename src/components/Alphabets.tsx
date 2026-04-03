@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Headphones, Pencil, Star, ChevronLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Headphones, Pencil, Star, ChevronLeft } from 'lucide-react';
 import { alphabetsData } from '../data/alphabets';
 import { useKidContext } from '../hooks/useKidContext';
 import TracingCanvas from './TracingCanvas';
@@ -103,16 +103,22 @@ const Alphabets: React.FC<Props> = ({ onBack }) => {
                   transition={{ delay: idx * 0.02 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => speak(a.char, getLangCode(lang))}
-                  className={`bg-white p-6 rounded-3xl shadow-lg border-b-4 border-slate-100 hover:border-kid-blue transition-all flex flex-col items-center justify-center aspect-square`}
+                  onClick={() => speak(a.phonetic, getLangCode(lang))}
+                  className={`bg-white p-8 rounded-[2.5rem] shadow-xl border-b-8 border-slate-100 hover:border-kid-blue transition-all flex flex-col items-center justify-center aspect-square gap-3`}
                 >
-                  <span className={`text-5xl font-black mb-2 ${
-                    idx % 5 === 0 ? 'text-kid-red' : 
-                    idx % 5 === 1 ? 'text-kid-blue' : 
-                    idx % 5 === 2 ? 'text-kid-green' : 
-                    idx % 5 === 3 ? 'text-kid-purple' : 'text-kid-pink'
-                  }`}>{a.char}</span>
-                  <span className="text-slate-400 font-bold text-xs uppercase tracking-widest">{a.phonetic}</span>
+                  <div className="text-6xl mb-2">{a.image}</div>
+                  <div className="flex flex-col items-center">
+                    <span className={`text-4xl font-black ${
+                      idx % 5 === 0 ? 'text-kid-red' : 
+                      idx % 5 === 1 ? 'text-kid-blue' : 
+                      idx % 5 === 2 ? 'text-kid-green' : 
+                      idx % 5 === 3 ? 'text-kid-purple' : 'text-kid-pink'
+                    }`}>{a.char} / {a.char.toLowerCase()}</span>
+                    <span className="text-2xl font-black text-slate-700 mt-1">{a.word}</span>
+                  </div>
+                  <div className="bg-slate-50 px-4 py-2 rounded-2xl">
+                    <span className="text-slate-400 font-bold text-xs uppercase tracking-widest text-center block leading-relaxed">{a.phonetic}</span>
+                  </div>
                 </motion.button>
               ))}
             </motion.div>
@@ -149,7 +155,7 @@ const Alphabets: React.FC<Props> = ({ onBack }) => {
               ) : (
                 <div className="w-full max-w-4xl">
                    <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-4">
-                    {alphabetsData[lang].map((a, idx) => (
+                    {alphabetsData[lang].map((a) => (
                       <button
                         key={a.char}
                         onClick={() => setSelectedChar(a.char)}

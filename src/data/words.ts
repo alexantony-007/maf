@@ -8,38 +8,49 @@ export const wordsLevels: { [level: number]: JumbleWord[] } = {
   1: [
     { answer: 'CAT', hint: 'Meow!', category: 'Animals' },
     { answer: 'DOG', hint: 'Woof!', category: 'Animals' },
-    { answer: 'RED', hint: 'Color of an apple', category: 'Colors' },
-    { answer: 'SUN', hint: 'Big and bright in the sky', category: 'Nature' },
-    { answer: 'BOY', hint: 'A young male', category: 'People' },
-    { answer: 'BAT', hint: 'Used to hit a ball', category: 'Sports' },
-    { answer: 'HAT', hint: 'Worn on the head', category: 'Clothes' },
-    { answer: 'PEN', hint: 'Used for writing', category: 'School' },
-    { answer: 'CUP', hint: 'Used for drinking', category: 'Kitchen' },
-    { answer: 'CAR', hint: 'Four wheels and a motor', category: 'Transport' }
+    { answer: 'SUN', hint: 'Big and bright', category: 'Nature' },
+    { answer: 'PEN', hint: 'Write with this', category: 'School' },
+    { answer: 'BAT', hint: 'Hit a ball', category: 'Sports' },
+    { answer: 'HAT', hint: 'Wear on head', category: 'Clothes' },
+    { answer: 'CUP', hint: 'Drink from this', category: 'Kitchen' },
+    { answer: 'BED', hint: 'Sleep here', category: 'Home' },
+    { answer: 'CAR', hint: 'Drive this', category: 'Transport' },
+    { answer: 'BOX', hint: 'Put things inside', category: 'Objects' }
   ],
   2: [
-    { answer: 'BIRD', hint: 'Can fly in the sky', category: 'Animals' },
-    { answer: 'FISH', hint: 'Swims in water', category: 'Animals' },
-    { answer: 'BLUE', hint: 'Color of the sky', category: 'Colors' },
-    { answer: 'TREE', hint: 'Has leaves and branches', category: 'Nature' },
-    { answer: 'GIRL', hint: 'A young female', category: 'People' },
-    { answer: 'BALL', hint: 'Round and used for play', category: 'Sports' },
-    { answer: 'SHOE', hint: 'Worn on feet', category: 'Clothes' },
-    { answer: 'BOOK', hint: 'You read this', category: 'School' },
-    { answer: 'FORK', hint: 'Used for eating', category: 'Kitchen' },
-    { answer: 'BIKE', hint: 'Two wheels and pedals', category: 'Transport' }
+    { answer: 'MAP', hint: 'Find your way', category: 'Objects' },
+    { answer: 'RUN', hint: 'Move fast', category: 'Actions' },
+    { answer: 'RED', hint: 'A bright color', category: 'Colors' },
+    { answer: 'BIG', hint: 'Not small', category: 'Sizes' },
+    { answer: 'TOY', hint: 'Play with this', category: 'Fun' },
+    { answer: 'LEG', hint: 'Part of body', category: 'Body' },
+    { answer: 'SKY', hint: 'High above', category: 'Nature' },
+    { answer: 'PIE', hint: 'Sweet treat', category: 'Food' },
+    { answer: 'BEE', hint: 'Makes honey', category: 'Animals' },
+    { answer: 'ICE', hint: 'Cold water', category: 'Nature' }
   ],
-  // Add more levels here...
   10: [
-    { answer: 'ELEPHANT', hint: 'Largest land animal', category: 'Animals' },
-    { answer: 'DINOSAUR', hint: 'Extinct reptile', category: 'Animals' },
-    { answer: 'RAINBOW', hint: 'Seven colors in the sky', category: 'Nature' },
-    { answer: 'MOUNTAIN', hint: 'Very high land', category: 'Nature' },
-    { answer: 'COMPUTER', hint: 'Electronic machine', category: 'Tech' },
-    { answer: 'AIRPLANE', hint: 'Flies people through air', category: 'Transport' },
-    { answer: 'UMBRELLA', hint: 'Protects from rain', category: 'Objects' },
-    { answer: 'NOTEBOOK', hint: 'Where you write notes', category: 'School' },
-    { answer: 'SANDWICH', hint: 'Two slices of bread with filling', category: 'Food' },
-    { answer: 'PUMPKIN', hint: 'Large orange vegetable', category: 'Food' }
+    { answer: 'FROG', hint: 'Jumps and croaks', category: 'Animals' },
+    { answer: 'TREE', hint: 'Has leaves', category: 'Nature' },
+    { answer: 'MILK', hint: 'White drink', category: 'Food' },
+    { answer: 'STAR', hint: 'Twinkles at night', category: 'Nature' },
+    { answer: 'BLUE', hint: 'Color of sea', category: 'Colors' },
+    { answer: 'HAND', hint: 'Five fingers', category: 'Body' },
+    { answer: 'BOOK', hint: 'Read this', category: 'School' },
+    { answer: 'RAIN', hint: 'Water from sky', category: 'Nature' },
+    { answer: 'FISH', hint: 'Swims in water', category: 'Animals' },
+    { answer: 'CAKE', hint: 'Birthday treat', category: 'Food' }
+  ],
+  25: [
+    { answer: 'CHAIR', hint: 'Sit on this', category: 'Home' },
+    { answer: 'PLANT', hint: 'Grows in soil', category: 'Nature' },
+    { answer: 'BREAD', hint: 'Eat with butter', category: 'Food' },
+    { answer: 'STONE', hint: 'Hard and grey', category: 'Nature' },
+    { answer: 'WATER', hint: 'Drink this', category: 'Nature' },
+    { answer: 'LIGHT', hint: 'Opposite of dark', category: 'Science' },
+    { answer: 'SMILE', hint: 'Happy face', category: 'Actions' },
+    { answer: 'TRAIN', hint: 'Runs on tracks', category: 'Transport' },
+    { answer: 'GREEN', hint: 'Color of grass', category: 'Colors' },
+    { answer: 'CLOCK', hint: 'Tells time', category: 'Objects' }
   ]
 };

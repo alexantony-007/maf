@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Utensils, Zap, Bath, Shirt, Sparkles, Droplets } from 'lucide-react';
+import { ArrowLeft, Utensils, Zap, Bath, Sparkles, Droplets } from 'lucide-react';
 import { useKidContext } from '../hooks/useKidContext';
 
 interface Props {
@@ -17,14 +17,6 @@ const Pet: React.FC<Props> = ({ onBack }) => {
 
   const petIcons = {
     cat: '🐱', dog: '🐶', rabbit: '🐰', elephant: '🐘', panda: '🐼'
-  };
-
-  const handleFeed = () => {
-    setAction('feeding');
-    setTimeout(() => {
-      updatePet({ hunger: Math.min(100, pet.hunger + 20) });
-      setAction('idle');
-    }, 2000);
   };
 
   const handleBath = () => {
@@ -55,10 +47,10 @@ const Pet: React.FC<Props> = ({ onBack }) => {
           <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight">My {pet.type}</h2>
         </div>
         <div className="flex items-center gap-4">
-           {['happiness', 'hunger', 'cleanliness'].map((stat) => (
+           {['happiness', 'hunger', 'cleanliness', 'energy'].map((stat) => (
              <div key={stat} className="hidden md:flex flex-col items-end gap-1">
                 <span className="text-[10px] font-black uppercase text-slate-400">{stat}</span>
-                <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div className="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${(pet as any)[stat]}%` }}
@@ -73,6 +65,12 @@ const Pet: React.FC<Props> = ({ onBack }) => {
       <main className="max-w-4xl mx-auto flex flex-col md:flex-row gap-8 mt-12 items-center">
         {/* Main Pet Stage */}
         <div className="flex-1 relative bg-white rounded-[4rem] p-12 shadow-2xl border-b-8 border-slate-100 flex flex-col items-center justify-center min-h-[500px]">
+          {/* Pet Name Display */}
+          <div className="absolute top-8 text-center">
+             <h1 className="text-3xl font-black text-slate-800 uppercase tracking-widest">{pet.name || 'My Pet'}</h1>
+             <div className="text-xs font-bold text-slate-400 uppercase">Age: {currentKid.age} Level</div>
+          </div>
+
           {/* Background Sparks */}
           {pet.happiness > 80 && (
             <motion.div 
@@ -89,11 +87,16 @@ const Pet: React.FC<Props> = ({ onBack }) => {
             animate={
               action === 'feeding' ? { scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] } :
               action === 'bathing' ? { x: [0, 5, -5, 0], rotate: [0, 2, -2, 0] } :
+              action === 'playing' ? { y: [0, -40, 0] } :
               { y: [0, -10, 0] }
             }
-            transition={{ duration: action === 'feeding' ? 0.3 : 2, repeat: Infinity }}
+            transition={{ duration: action === 'feeding' ? 0.3 : action === 'playing' ? 0.4 : 2, repeat: Infinity }}
             className="text-[180px] relative z-10 select-none cursor-pointer"
-            onClick={() => updatePet({ happiness: Math.min(100, pet.happiness + 5) })}
+            onClick={() => {
+                setAction('playing');
+                updatePet({ happiness: Math.min(100, pet.happiness + 5), energy: Math.max(0, pet.energy - 2) });
+                setTimeout(() => setAction('idle'), 1000);
+            }}
           >
             {petIcons[pet.type]}
             
@@ -151,7 +154,13 @@ const Pet: React.FC<Props> = ({ onBack }) => {
         <div className="w-full md:w-64 grid grid-cols-2 md:grid-cols-1 gap-4">
           <button 
             disabled={action !== 'idle'}
-            onClick={() => handleFeed()}
+            onClick={() => {
+                setAction('feeding');
+                setTimeout(() => {
+                  updatePet({ hunger: Math.max(0, pet.hunger - 20) }); // Feed -> hunger ↓
+                  setAction('idle');
+                }, 2000);
+            }}
             className="flex items-center gap-4 p-6 bg-white rounded-3xl shadow-xl hover:shadow-2xl border-b-4 border-kid-orange hover:border-orange-600 transition-all group btn-bouncy"
           >
             <div className="w-12 h-12 bg-kid-orange rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
@@ -168,29 +177,36 @@ const Pet: React.FC<Props> = ({ onBack }) => {
             <div className="w-12 h-12 bg-kid-blue rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
               <Bath size={24} />
             </div>
-            <span className="font-black text-slate-700">BATH</span>
+            <span className="font-black text-slate-700">CLEAN</span>
           </button>
 
           <button 
             disabled={action !== 'idle'}
-            onClick={() => setAction('dressing')}
-            className="flex items-center gap-4 p-6 bg-white rounded-3xl shadow-xl hover:shadow-2xl border-b-4 border-kid-purple hover:border-purple-600 transition-all group btn-bouncy"
-          >
-            <div className="w-12 h-12 bg-kid-purple rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-              <Shirt size={24} />
-            </div>
-            <span className="font-black text-slate-700">DRESS</span>
-          </button>
-
-          <button 
-            disabled={action !== 'idle'}
-            onClick={() => updatePet({ happiness: Math.min(100, pet.happiness + 10) })}
+            onClick={() => {
+                setAction('playing');
+                updatePet({ happiness: Math.min(100, pet.happiness + 20), energy: Math.max(0, pet.energy - 15) });
+                setTimeout(() => setAction('idle'), 2000);
+            }}
             className="flex items-center gap-4 p-6 bg-white rounded-3xl shadow-xl hover:shadow-2xl border-b-4 border-kid-pink hover:border-pink-600 transition-all group btn-bouncy"
           >
             <div className="w-12 h-12 bg-kid-pink rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
               <Zap size={24} />
             </div>
             <span className="font-black text-slate-700">PLAY</span>
+          </button>
+
+          <button 
+            disabled={action !== 'idle'}
+            onClick={() => {
+                setAction('idle');
+                updatePet({ energy: Math.min(100, pet.energy + 40) });
+            }}
+            className="flex items-center gap-4 p-6 bg-white rounded-3xl shadow-xl hover:shadow-2xl border-b-4 border-kid-purple hover:border-purple-600 transition-all group btn-bouncy"
+          >
+            <div className="w-12 h-12 bg-kid-purple rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+              <Zap size={24} />
+            </div>
+            <span className="font-black text-slate-700">SLEEP</span>
           </button>
         </div>
       </main>

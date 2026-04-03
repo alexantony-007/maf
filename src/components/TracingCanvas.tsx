@@ -100,8 +100,9 @@ const TracingCanvas: React.FC<Props> = ({ char, langCode, onComplete }) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.strokeStyle = '#4D96FF'; // kid-blue
-    ctx.lineWidth = 20;
+    // UI: Incomplete -> light (blue), Completed (if score exists) -> dark bold
+    ctx.strokeStyle = score !== null ? '#1E293B' : '#4D96FF'; 
+    ctx.lineWidth = 24;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.beginPath();
@@ -121,13 +122,19 @@ const TracingCanvas: React.FC<Props> = ({ char, langCode, onComplete }) => {
     });
     
     const ratio = inside / points.length;
-    let stars = 1;
-    if (ratio > 0.95) stars = 5;
-    else if (ratio > 0.8) stars = 4;
-    else if (ratio > 0.6) stars = 3;
-    else if (ratio > 0.4) stars = 2;
+    
+    // DEV NOTE: If >=70% match -> success
+    let stars = 0;
+    if (ratio >= 0.7) {
+      if (ratio > 0.9) stars = 5;
+      else if (ratio > 0.8) stars = 4;
+      else stars = 3;
+    } else {
+      stars = 1;
+    }
     
     setScore(stars);
+    renderPath(); // Re-render with new color
     setTimeout(() => onComplete(stars), 1500);
   };
 

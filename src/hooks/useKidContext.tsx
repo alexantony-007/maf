@@ -4,7 +4,7 @@ import type { KidProfile, Gender, PetState } from '../types';
 interface KidContextType {
   kids: KidProfile[];
   currentKid: KidProfile | null;
-  addKid: (name: string, gender: Gender) => void;
+  addKid: (name: string, age: number, gender: Gender) => void;
   selectKid: (id: string) => void;
   addStars: (amount: number) => void;
   unlockSticker: (id: string) => void;
@@ -33,27 +33,35 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (currentKidId) localStorage.setItem('kid_learn_active_id', currentKidId);
   }, [currentKidId]);
 
-  const addKid = (name: string, gender: Gender) => {
+  const addKid = (name: string, age: number, gender: Gender) => {
     const newKid: KidProfile = {
       id: Date.now().toString(36) + Math.random().toString(36).substring(2),
       name,
+      age,
       gender,
       stars: 0,
       unlockedStickers: [],
       pet: {
+        name: 'Buddy',
         type: 'cat',
         happiness: 80,
-        hunger: 80,
+        hunger: 20, // Low hunger = full
         cleanliness: 80,
+        energy: 100,
         unlockedItems: []
       },
       progress: {
         alphabets: {},
-        words: 1,
-        sentences: 1
+        wordsLevel: 1,
+        storiesLevel: 1,
+        numbersLevel: 1
       }
     };
-    setKids(prev => [...prev, newKid]);
+    setKids(prev => {
+      const updated = [...prev, newKid];
+      localStorage.setItem('kid_learn_kids', JSON.stringify(updated));
+      return updated;
+    });
     if (!currentKidId) setCurrentKidId(newKid.id);
   };
 
