@@ -85,7 +85,7 @@ const Words: React.FC<Props> = ({ onBack }) => {
         <div className="max-w-4xl w-full mt-12 bg-white/50 backdrop-blur-sm p-12 rounded-[4rem] border border-white/50 shadow-xl">
           <h1 className="text-5xl font-black text-slate-800 mb-12 text-center tracking-tight">Pick a <span className="text-rainbow">Level</span>! 📚</h1>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-8">
-            {[1,2,3,4,5,6,7,8,9,10].map(level => (
+            {Object.keys(wordsLevels).map(Number).sort((a, b) => a - b).map(level => (
               <button
                 key={level}
                 onClick={() => {

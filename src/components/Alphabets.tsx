@@ -11,7 +11,7 @@ interface Props {
 
 const Alphabets: React.FC<Props> = ({ onBack }) => {
   const { addStars } = useKidContext();
-  const [lang, setLang] = useState<'english' | 'hindi' | 'malayalam'>('english');
+  const [lang, setLang] = useState<'English' | 'Hindi' | 'Malayalam'>('English');
   const [mode, setMode] = useState<'learn' | 'trace'>('learn');
   const [selectedChar, setSelectedChar] = useState<string | null>(null);
 
@@ -23,8 +23,8 @@ const Alphabets: React.FC<Props> = ({ onBack }) => {
 
   const getLangCode = (l: string) => {
     switch(l) {
-      case 'hindi': return 'hi-IN';
-      case 'malayalam': return 'ml-IN';
+      case 'Hindi': return 'hi-IN';
+      case 'Malayalam': return 'ml-IN';
       default: return 'en-US';
     }
   };
@@ -44,13 +44,13 @@ const Alphabets: React.FC<Props> = ({ onBack }) => {
         </div>
         
         <div className="flex bg-slate-200/50 backdrop-blur-sm p-1.5 rounded-[1.5rem] gap-1 border border-white/50">
-          {(['english', 'hindi', 'malayalam'] as const).map((l) => (
+          {(['English', 'Hindi', 'Malayalam'] as const).map((l) => (
             <button 
               key={l}
               onClick={() => setLang(l)}
               className={`px-5 py-2 rounded-xl font-black transition-all text-sm ${lang === l ? 'bg-white text-slate-900 shadow-md scale-105' : 'text-slate-500 hover:text-slate-700'}`}
             >
-              {l === 'english' ? 'A-Z' : l === 'hindi' ? 'अ-ज्ञ' : 'അ-റ'}
+              {l === 'English' ? 'A-Z' : l === 'Hindi' ? 'अ-ज्ञ' : 'അ-റ'}
             </button>
           ))}
         </div>

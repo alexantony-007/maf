@@ -4,7 +4,7 @@ import { KidProvider, useKidContext } from './hooks/useKidContext';
 import { 
   BookOpen, Hash, Languages, 
   MessageCircle, Brush, Heart, Star, 
-  Plus, Settings, X
+  Plus, Settings, X, LogOut, User, UserRound
 } from 'lucide-react';
 import Alphabets from './components/Alphabets';
 import Words from './components/Words';
@@ -13,14 +13,18 @@ import Coloring from './components/Coloring';
 import Stickers from './components/Stickers';
 import Stories from './components/Stories';
 import GenericLearn from './components/GenericLearn';
+import ParentAuth from './components/ParentAuth';
 import { numbersData } from './data/numbers';
 import { colorsData } from './data/generic';
 import type { Gender } from './types';
 
 const Dashboard = () => {
-  const { currentKid } = useKidContext();
+  const { currentKid, parent, logoutParent, selectKid } = useKidContext();
   const [view, setView] = useState<'dashboard' | 'alphabets' | 'numbers' | 'colors' | 'words' | 'stories' | 'coloring' | 'pet' | 'stickers'>('dashboard');
   
+  if (!parent) return <ParentAuth />;
+  if (!currentKid) return <KidSelector />;
+
   const modules = [
     { id: 'alphabets', title: 'Alphabets', icon: <Languages />, color: 'bg-kid-red', desc: 'A, B, C / അ, ആ' },
     { id: 'numbers', title: 'Numbers', icon: <Hash />, color: 'bg-kid-blue', desc: '1, 2, 3 / Count Objects' },
@@ -30,8 +34,6 @@ const Dashboard = () => {
     { id: 'pet', title: 'My Pet', icon: <Heart />, color: 'bg-kid-orange', desc: 'Feed & Play with Buddy' },
     { id: 'stickers', title: 'Sticker Shop', icon: <Star />, color: 'bg-kid-cyan', desc: 'Unlock 100 Stickers' },
   ];
-
-  if (!currentKid) return <KidSelector />;
 
   if (view !== 'dashboard') {
     if (view === 'alphabets') return <Alphabets onBack={() => setView('dashboard')} />;
@@ -60,12 +62,13 @@ const Dashboard = () => {
           <motion.div 
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.5 }}
-            className={`w-12 h-12 rounded-2xl ${currentKid.gender === 'boy' ? 'bg-kid-blue' : 'bg-kid-pink'} flex items-center justify-center text-white font-black shadow-xl border-2 border-white/50`}
+            onClick={() => selectKid(null)}
+            className={`w-12 h-12 rounded-2xl cursor-pointer ${currentKid.gender === 'boy' ? 'bg-kid-blue' : 'bg-kid-pink'} flex items-center justify-center text-white font-black shadow-xl border-2 border-white/50 hover:scale-110 transition-transform`}
           >
             {currentKid.name[0]}
           </motion.div>
           <div>
-            <h1 className="text-2xl font-black text-slate-800 leading-tight tracking-tight">{currentKid.name}</h1>
+            <h1 className="text-2xl font-black text-slate-800 leading-none tracking-tight">{currentKid.name}</h1>
             <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] leading-none mt-1">Age {currentKid.age} • Explorer</p>
           </div>
         </div>
@@ -75,8 +78,9 @@ const Dashboard = () => {
             <Star className="w-5 h-5 text-kid-yellow fill-kid-yellow star-glow group-hover:scale-125 transition-transform" />
             <span className="font-black text-xl text-slate-700">{currentKid.stars}</span>
           </div>
-          <button onClick={() => window.location.reload()} className="p-3 text-slate-400 hover:text-slate-600 transition-all hover:rotate-90 bg-white/50 rounded-2xl border border-white/50 shadow-sm">
-            <Settings className="w-5 h-5" />
+          <button onClick={logoutParent} className="p-3 text-slate-400 hover:text-red-500 transition-all hover:scale-110 bg-white/50 rounded-2xl border border-white/50 shadow-sm group relative">
+            <LogOut className="w-5 h-5" />
+            <span className="absolute -bottom-10 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] px-3 py-1.5 rounded-xl font-black uppercase tracking-widest whitespace-nowrap shadow-xl">Exit Parent Portal</span>
           </button>
         </div>
       </header>
@@ -137,7 +141,7 @@ const Dashboard = () => {
 };
 
 const KidSelector = () => {
-  const { kids, addKid, selectKid } = useKidContext();
+  const { kids, addKid, selectKid, logoutParent, parent } = useKidContext();
   const [showAdd, setShowAdd] = useState(false);
   const [newName, setNewName] = useState('');
   const [age, setAge] = useState(4);
@@ -145,6 +149,13 @@ const KidSelector = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Logout Parent helper */}
+      <div className="absolute top-10 right-10 z-50">
+        <button onClick={logoutParent} className="flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-400 font-black text-[10px] uppercase tracking-widest transition-all">
+          <LogOut size={16} strokeWidth={3} /> Not {parent?.contact}?
+        </button>
+      </div>
+
       {/* Decorative blobs */}
       <div className="absolute -top-20 -left-20 w-80 h-80 bg-kid-pink/10 rounded-full blur-[100px]" />
       <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-kid-blue/10 rounded-full blur-[100px]" />
@@ -154,8 +165,8 @@ const KidSelector = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="max-w-4xl w-full text-center relative z-10"
       >
-        <h1 className="text-7xl md:text-8xl font-black text-rainbow mb-6 drop-shadow-xl select-none">Grace Learn</h1>
-        <p className="text-slate-400 font-black mb-16 uppercase tracking-[0.3em] text-xs">Unlock your potential • Have fun</p>
+        <h1 className="text-7xl md:text-8xl font-black text-rainbow mb-6 drop-shadow-xl select-none">KidsPlay</h1>
+        <p className="text-slate-400 font-black mb-16 uppercase tracking-[0.3em] text-xs leading-none">Choose your profile • Have fun</p>
 
         <div className="flex flex-wrap justify-center gap-12 mb-16">
           {kids.map((kid) => (
@@ -197,7 +208,7 @@ const KidSelector = () => {
                 exit={{ scale: 0.9, opacity: 0, y: 40 }}
                 className="bg-white rounded-[4rem] p-12 max-w-lg w-full shadow-[0_32px_64px_rgba(0,0,0,0.2)] relative border-4 border-white"
               >
-                <button onClick={() => setShowAdd(false)} className="absolute top-10 right-10 text-slate-300 hover:text-slate-500 transition-colors">
+                <button onClick={() => setShowAdd(false)} className="absolute top-10 right-10 text-slate-300 hover:text-slate-500 transition-all">
                     <X size={36} strokeWidth={4} />
                 </button>
 
@@ -214,28 +225,34 @@ const KidSelector = () => {
                       type="text"
                       placeholder="Enter name"
                       autoFocus
-                      className="w-full px-10 py-6 rounded-[2.5rem] bg-slate-50 border-4 border-transparent focus:border-kid-purple/20 focus:bg-white outline-none text-3xl font-black placeholder:text-slate-300 transition-all shadow-inner"
+                      className="w-full px-10 py-6 rounded-[2.5rem] bg-slate-50 border-4 border-transparent focus:border-kid-purple/20 focus:bg-white outline-none text-2xl font-black placeholder:text-slate-300 transition-all shadow-inner"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                     />
                   </div>
 
-                  <div className="flex gap-6">
+                  <div className="flex flex-col sm:flex-row gap-6">
                     <div className="flex-1">
                         <label className="block text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 px-4">Age</label>
                         <select 
                            value={age}
                            onChange={(e) => setAge(parseInt(e.target.value))}
-                           className="w-full px-8 py-5 rounded-[2rem] bg-slate-50 border-4 border-transparent focus:border-kid-purple/20 outline-none text-2xl font-black transition-all appearance-none cursor-pointer shadow-inner"
+                           className="w-full px-8 py-5 rounded-[2rem] bg-slate-50 border-4 border-transparent focus:border-kid-purple/20 outline-none text-xl font-black transition-all appearance-none cursor-pointer shadow-inner"
                         >
-                            {[3, 4, 5, 6, 7].map(a => <option key={a} value={a}>{a} Years</option>)}
+                            {[3, 4, 5, 6, 7, 8, 9, 10].map(a => <option key={a} value={a}>{a} Years</option>)}
                         </select>
                     </div>
                     <div className="flex-1">
                         <label className="block text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 px-4">Gender</label>
                         <div className="flex gap-3">
-                           <button onClick={() => setGender('boy')} className={`flex-1 py-5 rounded-[2rem] text-3xl transition-all shadow-sm ${gender === 'boy' ? 'bg-kid-blue shadow-lg scale-110' : 'bg-slate-50 opacity-40 hover:opacity-100'}`}>🚗</button>
-                           <button onClick={() => setGender('girl')} className={`flex-1 py-5 rounded-[2rem] text-3xl transition-all shadow-sm ${gender === 'girl' ? 'bg-kid-pink shadow-lg scale-110' : 'bg-slate-50 opacity-40 hover:opacity-100'}`}>🦄</button>
+                           <button onClick={() => setGender('boy')} className={`flex-1 py-5 rounded-[2rem] flex flex-col items-center justify-center transition-all shadow-sm ${gender === 'boy' ? 'bg-kid-blue text-white shadow-lg scale-110' : 'bg-slate-50 text-slate-400 opacity-60'}`}>
+                             <User size={32} strokeWidth={3} />
+                             <span className="text-[10px] font-black mt-1 uppercase tracking-widest leading-none">Boy</span>
+                           </button>
+                           <button onClick={() => setGender('girl')} className={`flex-1 py-5 rounded-[2rem] flex flex-col items-center justify-center transition-all shadow-sm ${gender === 'girl' ? 'bg-kid-pink text-white shadow-lg scale-110' : 'bg-slate-50 text-slate-400 opacity-60'}`}>
+                             <UserRound size={32} strokeWidth={3} />
+                             <span className="text-[10px] font-black mt-1 uppercase tracking-widest leading-none">Girl</span>
+                           </button>
                         </div>
                     </div>
                   </div>
@@ -260,14 +277,14 @@ const KidSelector = () => {
         </motion.div>
       </div>
     );
-  };
-  
-  const App = () => {
-    return (
-      <KidProvider>
-        <Dashboard />
-      </KidProvider>
-    );
-  };
-  
-  export default App;
+}
+
+const App = () => {
+  return (
+    <KidProvider>
+      <Dashboard />
+    </KidProvider>
+  );
+};
+
+export default App;

@@ -1,19 +1,33 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { KidProfile, Gender, PetState } from '../types';
 
+interface ParentProfile {
+  id: string;
+  contact: string; // Email or Mobile
+  type: 'email' | 'mobile';
+}
+
 interface KidContextType {
   kids: KidProfile[];
   currentKid: KidProfile | null;
+  parent: ParentProfile | null;
   addKid: (name: string, age: number, gender: Gender) => void;
-  selectKid: (id: string) => void;
+  selectKid: (id: string | null) => void;
   addStars: (amount: number) => void;
   unlockSticker: (id: string) => void;
   updatePet: (update: Partial<PetState>) => void;
+  loginParent: (contact: string, type: 'email' | 'mobile') => void;
+  logoutParent: () => void;
 }
 
 const KidContext = createContext<KidContextType | undefined>(undefined);
 
 export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [parent, setParent] = useState<ParentProfile | null>(() => {
+    const saved = localStorage.getItem('kid_learn_parent');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [kids, setKids] = useState<KidProfile[]>(() => {
     const saved = localStorage.getItem('kid_learn_kids');
     return saved ? JSON.parse(saved) : [];
@@ -30,8 +44,24 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [kids]);
 
   useEffect(() => {
+    if (parent) localStorage.setItem('kid_learn_parent', JSON.stringify(parent));
+    else localStorage.removeItem('kid_learn_parent');
+  }, [parent]);
+
+  useEffect(() => {
     if (currentKidId) localStorage.setItem('kid_learn_active_id', currentKidId);
+    else localStorage.removeItem('kid_learn_active_id');
   }, [currentKidId]);
+
+  const loginParent = (contact: string, type: 'email' | 'mobile') => {
+    const newParent: ParentProfile = { id: Date.now().toString(), contact, type };
+    setParent(newParent);
+  };
+
+  const logoutParent = () => {
+    setParent(null);
+    setCurrentKidId(null);
+  };
 
   const addKid = (name: string, age: number, gender: Gender) => {
     const newKid: KidProfile = {
@@ -45,7 +75,7 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         name: 'Buddy',
         type: 'cat',
         happiness: 80,
-        hunger: 20, // Low hunger = full
+        hunger: 20,
         cleanliness: 80,
         energy: 100,
         unlockedItems: []
@@ -57,15 +87,11 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         numbersLevel: 1
       }
     };
-    setKids(prev => {
-      const updated = [...prev, newKid];
-      localStorage.setItem('kid_learn_kids', JSON.stringify(updated));
-      return updated;
-    });
+    setKids(prev => [...prev, newKid]);
     if (!currentKidId) setCurrentKidId(newKid.id);
   };
 
-  const selectKid = (id: string) => setCurrentKidId(id);
+  const selectKid = (id: string | null) => setCurrentKidId(id);
 
   const addStars = (amount: number) => {
     setKids(prev => prev.map(k => k.id === currentKidId ? { ...k, stars: k.stars + amount } : k));
@@ -80,7 +106,7 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   return (
-    <KidContext.Provider value={{ kids, currentKid, addKid, selectKid, addStars, unlockSticker, updatePet }}>
+    <KidContext.Provider value={{ kids, currentKid, parent, addKid, selectKid, addStars, unlockSticker, updatePet, loginParent, logoutParent }}>
       {children}
     </KidContext.Provider>
   );
