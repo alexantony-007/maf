@@ -145,7 +145,7 @@ const KidSelector = () => {
       {/* Logout Parent helper */}
       <div className="absolute top-10 right-10 z-50">
         <button onClick={logoutParent} className="flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-400 font-black text-[10px] uppercase tracking-widest transition-all">
-          <LogOut size={16} strokeWidth={3} /> Not {parent?.contact}?
+          <LogOut size={16} strokeWidth={3} /> Not {parent?.fullName}?
         </button>
       </div>
 

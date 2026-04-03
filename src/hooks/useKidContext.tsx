@@ -1,11 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { KidProfile, Gender, PetState } from '../types';
-
-interface ParentProfile {
-  id: string;
-  contact: string; // Email or Mobile
-  type: 'email' | 'mobile';
-}
+import type { KidProfile, Gender, PetState, ParentProfile, ParentAccount } from '../types';
 
 interface KidContextType {
   kids: KidProfile[];
@@ -16,7 +10,8 @@ interface KidContextType {
   addStars: (amount: number) => void;
   unlockSticker: (id: string) => void;
   updatePet: (update: Partial<PetState>) => void;
-  loginParent: (contact: string, type: 'email' | 'mobile') => void;
+  loginParent: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  registerParent: (fullName: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logoutParent: () => void;
 }
 
@@ -26,6 +21,11 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [parent, setParent] = useState<ParentProfile | null>(() => {
     const saved = localStorage.getItem('kid_learn_parent');
     return saved ? JSON.parse(saved) : null;
+  });
+
+  const [accounts, setAccounts] = useState<ParentAccount[]>(() => {
+    const saved = localStorage.getItem('kid_learn_accounts');
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [kids, setKids] = useState<KidProfile[]>(() => {
@@ -44,6 +44,10 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [kids]);
 
   useEffect(() => {
+    localStorage.setItem('kid_learn_accounts', JSON.stringify(accounts));
+  }, [accounts]);
+
+  useEffect(() => {
     if (parent) localStorage.setItem('kid_learn_parent', JSON.stringify(parent));
     else localStorage.removeItem('kid_learn_parent');
   }, [parent]);
@@ -53,9 +57,46 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     else localStorage.removeItem('kid_learn_active_id');
   }, [currentKidId]);
 
-  const loginParent = (contact: string, type: 'email' | 'mobile') => {
-    const newParent: ParentProfile = { id: Date.now().toString(), contact, type };
+  const loginParent = async (email: string, password: string) => {
+    const account = accounts.find(a => a.email.toLowerCase() === email.toLowerCase());
+    
+    if (!account) {
+      return { success: false, error: 'Account not found. Please register first.' };
+    }
+
+    if (account.passwordHash !== btoa(password)) { // Dummy hash for local security
+      return { success: false, error: 'Incorrect password.' };
+    }
+
+    const newParent: ParentProfile = { 
+      id: Date.now().toString(), 
+      email: account.email,
+      fullName: account.fullName
+    };
     setParent(newParent);
+    return { success: true };
+  };
+
+  const registerParent = async (fullName: string, email: string, password: string) => {
+    if (accounts.some(a => a.email.toLowerCase() === email.toLowerCase())) {
+      return { success: false, error: 'Email already registered.' };
+    }
+
+    const newAccount: ParentAccount = {
+      fullName,
+      email,
+      passwordHash: btoa(password) // Dummy hash
+    };
+
+    setAccounts(prev => [...prev, newAccount]);
+    
+    const newParent: ParentProfile = { 
+      id: Date.now().toString(), 
+      email: newAccount.email,
+      fullName: newAccount.fullName
+    };
+    setParent(newParent);
+    return { success: true };
   };
 
   const logoutParent = () => {
@@ -106,7 +147,7 @@ export const KidProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   return (
-    <KidContext.Provider value={{ kids, currentKid, parent, addKid, selectKid, addStars, unlockSticker, updatePet, loginParent, logoutParent }}>
+    <KidContext.Provider value={{ kids, currentKid, parent, addKid, selectKid, addStars, unlockSticker, updatePet, loginParent, registerParent, logoutParent }}>
       {children}
     </KidContext.Provider>
   );

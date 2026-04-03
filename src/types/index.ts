@@ -25,3 +25,15 @@ export interface KidProfile {
     numbersLevel: number;
   };
 }
+
+export interface ParentAccount {
+  email: string;
+  passwordHash: string; // Simulated hash for local storage
+  fullName: string;
+}
+
+export interface ParentProfile {
+  id: string;
+  email: string;
+  fullName: string;
+}
