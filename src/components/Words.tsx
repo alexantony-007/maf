@@ -29,7 +29,24 @@ const Words: React.FC<Props> = ({ onBack }) => {
 
   const initWord = (word: string) => {
     const letters = word.split('');
-    const shuffled = [...letters].sort(() => Math.random() - 0.5);
+    let shuffled = [...letters];
+    
+    // Fisher-Yates Shuffle
+    const shuffleArray = (array: string[]) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    // Keep shuffling until it's different from the original word (if possible)
+    let attempts = 0;
+    while (shuffled.join('') === word && attempts < 10 && letters.length > 1) {
+      shuffled = shuffleArray([...letters]);
+      attempts++;
+    }
+
     setScrambled(shuffled);
     setUserGuess([]);
     setMistakes(0);

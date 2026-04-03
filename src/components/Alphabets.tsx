@@ -146,11 +146,11 @@ const Alphabets: React.FC<Props> = ({ onBack }) => {
                     <ChevronLeft /> Back to List
                   </button>
                   <div className="text-center mb-8">
-                    <h3 className="text-4xl font-black text-slate-800">Trace the letter "{selectedChar}"</h3>
+                    <h3 className="text-4xl font-black text-slate-800">Trace the letter "{lang === 'English' ? selectedChar.split(' ')[0] : selectedChar}"</h3>
                     <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Follow the dots! ✨</p>
                   </div>
                   <TracingCanvas 
-                    char={selectedChar} 
+                    char={lang === 'English' ? selectedChar.split(' ')[0] : selectedChar} 
                     langCode={getLangCode(lang)} 
                     onComplete={(stars) => {
                       addStars(stars);
@@ -160,8 +160,8 @@ const Alphabets: React.FC<Props> = ({ onBack }) => {
                   />
                 </div>
               ) : (
-                <div className="w-full max-w-4xl">
-                   <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-4">
+                 <div className="w-full max-w-4xl max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+                   <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-4 pb-10">
                     {alphabetsData[lang].map((a) => (
                       <button
                         key={a.char}
