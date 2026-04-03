@@ -55,58 +55,78 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen p-4 md:p-8 bg-slate-50">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-3 flex justify-between items-center shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-full ${currentKid.gender === 'boy' ? 'bg-kid-blue' : 'bg-kid-pink'} flex items-center justify-center text-white font-black shadow-inner`}>
+      <header className="fixed top-0 left-0 right-0 z-50 glass px-6 py-4 flex justify-between items-center shadow-lg border-b border-white/20">
+        <div className="flex items-center gap-4">
+          <motion.div 
+            whileHover={{ rotate: 360 }}
+            transition={{ duration: 0.5 }}
+            className={`w-12 h-12 rounded-2xl ${currentKid.gender === 'boy' ? 'bg-kid-blue' : 'bg-kid-pink'} flex items-center justify-center text-white font-black shadow-xl border-2 border-white/50`}
+          >
             {currentKid.name[0]}
-          </div>
+          </motion.div>
           <div>
-            <h1 className="text-xl font-black text-slate-800 leading-tight">{currentKid.name}</h1>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Age {currentKid.age} • {currentKid.gender}</p>
+            <h1 className="text-2xl font-black text-slate-800 leading-tight tracking-tight">{currentKid.name}</h1>
+            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] leading-none mt-1">Age {currentKid.age} • Explorer</p>
           </div>
         </div>
         
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 bg-yellow-50 px-4 py-2 rounded-full border border-yellow-100 shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer">
-            <Star className="w-5 h-5 text-kid-yellow fill-kid-yellow star-glow" />
-            <span className="font-black text-lg text-yellow-700">{currentKid.stars}</span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 bg-white/50 backdrop-blur-sm px-5 py-2.5 rounded-2xl border border-white/50 shadow-sm transition-all hover:bg-white hover:shadow-md cursor-pointer group">
+            <Star className="w-5 h-5 text-kid-yellow fill-kid-yellow star-glow group-hover:scale-125 transition-transform" />
+            <span className="font-black text-xl text-slate-700">{currentKid.stars}</span>
           </div>
-          <button onClick={() => window.location.reload()} className="p-2 text-slate-400 hover:text-slate-600 transition-colors btn-bouncy">
+          <button onClick={() => window.location.reload()} className="p-3 text-slate-400 hover:text-slate-600 transition-all hover:rotate-90 bg-white/50 rounded-2xl border border-white/50 shadow-sm">
             <Settings className="w-5 h-5" />
           </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="mt-20 max-w-6xl mx-auto">
-        <div className="mb-10 text-center md:text-left">
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 leading-tight">Hello, {currentKid.name}! 👋</h2>
-          <p className="text-xl text-slate-500 font-medium tracking-tight">Ready for a new adventure today? ✨</p>
-        </div>
+      <main className="mt-28 max-w-6xl mx-auto px-4 pb-20">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-12 text-center md:text-left"
+        >
+          <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-3 leading-tight tracking-tighter">
+            Hello, <span className="text-rainbow">{currentKid.name}</span>! 👋
+          </h2>
+          <p className="text-xl text-slate-500 font-bold tracking-tight">Ready for a new adventure today? ✨</p>
+        </motion.div>
 
         {/* Home Screen Modules Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {modules.map((module, idx) => (
             <motion.div
               key={module.id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.08, type: 'spring', stiffness: 260, damping: 20 }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setView(module.id as any)}
-              className={`group cursor-pointer bg-white rounded-[2.5rem] p-8 shadow-xl border-b-8 border-slate-100 hover:shadow-2xl transition-all relative overflow-hidden`}
+              className="group cursor-pointer glass-card p-10 rounded-[3.5rem] relative overflow-hidden"
             >
-              <div className={`${module.color} w-16 h-16 rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                {React.cloneElement(module.icon as React.ReactElement<any>, { size: 32, strokeWidth: 3 })}
-              </div>
-              <div className="relative z-10">
-                <h3 className="text-2xl font-black text-slate-800 mb-1 group-hover:text-slate-900 transition-colors">{module.title}</h3>
-                <p className="text-slate-400 font-bold text-sm tracking-wide leading-relaxed">{module.desc}</p>
+              {/* Dynamic Gradient Background Glow */}
+              <div className={`absolute -top-12 -right-12 w-40 h-40 ${module.color.replace('bg-', 'bg-')}/10 blur-[60px] group-hover:blur-[40px] transition-all`} />
+              
+              <div className={`${module.color} w-20 h-20 rounded-[2rem] flex items-center justify-center text-white mb-8 shadow-2xl group-hover:rotate-12 transition-all duration-500 border-4 border-white/30`}>
+                {React.cloneElement(module.icon as React.ReactElement<any>, { size: 40, strokeWidth: 3 })}
               </div>
               
-              <div className="absolute -bottom-2 -right-2 opacity-5 group-hover:opacity-10 transition-opacity">
-                 {React.cloneElement(module.icon as React.ReactElement<any>, { size: 120, strokeWidth: 3 })}
+              <div className="relative z-10">
+                <h3 className="text-3xl font-black text-slate-800 mb-2 group-hover:tracking-tight transition-all">{module.title}</h3>
+                <p className="text-slate-500 font-bold text-sm tracking-wide leading-relaxed opacity-80">{module.desc}</p>
+              </div>
+              
+              {/* Floating Icon Background Decor */}
+              <div className="absolute -bottom-4 -right-4 opacity-10 group-hover:opacity-20 transition-all group-hover:scale-125 duration-700">
+                 {React.cloneElement(module.icon as React.ReactElement<any>, { size: 140, strokeWidth: 3 })}
+              </div>
+              
+              {/* Interaction Hint */}
+              <div className="mt-8 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">
+                Play Now <Plus size={14} strokeWidth={4} />
               </div>
             </motion.div>
           ))}
@@ -132,25 +152,28 @@ const KidSelector = () => {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-xl w-full text-center relative z-10"
+        className="max-w-4xl w-full text-center relative z-10"
       >
-        <h1 className="text-6xl md:text-7xl font-black text-rainbow mb-6 drop-shadow-sm">Grace Learn</h1>
-        <p className="text-slate-400 font-black mb-12 uppercase tracking-[0.2em] text-sm">Welcome to your learning world</p>
+        <h1 className="text-7xl md:text-8xl font-black text-rainbow mb-6 drop-shadow-xl select-none">Grace Learn</h1>
+        <p className="text-slate-400 font-black mb-16 uppercase tracking-[0.3em] text-xs">Unlock your potential • Have fun</p>
 
-        <div className="flex flex-wrap justify-center gap-8 mb-12">
+        <div className="flex flex-wrap justify-center gap-12 mb-16">
           {kids.map((kid) => (
             <button
               key={kid.id}
               onClick={() => selectKid(kid.id)}
               className="flex flex-col items-center group btn-bouncy"
             >
-              <div className={`w-32 h-32 rounded-[2.5rem] p-1.5 mb-4 shadow-xl group-hover:rotate-6 transition-all bg-gradient-to-br ${kid.gender === 'boy' ? 'from-kid-blue to-blue-600' : 'from-kid-pink to-pink-600'}`}>
-                <div className={`w-full h-full rounded-[2rem] bg-white flex items-center justify-center text-5xl font-black shadow-inner ${kid.gender === 'boy' ? 'text-kid-blue' : 'text-kid-pink'}`}>
+              <div className={`w-40 h-40 rounded-[3.5rem] p-2 mb-6 shadow-2xl group-hover:rotate-6 transition-all bg-gradient-to-br ${kid.gender === 'boy' ? 'from-kid-blue to-blue-600' : 'from-kid-pink to-pink-600'}`}>
+                <div className={`w-full h-full rounded-[3rem] bg-white flex items-center justify-center text-6xl font-black shadow-inner ${kid.gender === 'boy' ? 'text-kid-blue' : 'text-kid-pink'}`}>
                   {kid.name[0]}
                 </div>
               </div>
-              <span className="text-2xl font-black text-slate-700 group-hover:text-slate-900 transition-colors">{kid.name}</span>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Age {kid.age}</span>
+              <span className="text-3xl font-black text-slate-700 group-hover:text-slate-900 transition-colors tracking-tight">{kid.name}</span>
+              <div className="mt-2 flex items-center gap-2">
+                 <span className="text-xs font-black text-slate-400 uppercase tracking-widest px-3 py-1 bg-slate-100 rounded-full">Age {kid.age}</span>
+                 <div className="w-2 h-2 rounded-full bg-kid-green animate-pulse" />
+              </div>
             </button>
           ))}
 
@@ -158,56 +181,61 @@ const KidSelector = () => {
             onClick={() => setShowAdd(true)}
             className="flex flex-col items-center group btn-bouncy"
           >
-            <div className="w-32 h-32 rounded-[2.5rem] bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-slate-100 group-hover:text-slate-500 transition-all mb-4 border-4 border-dashed border-slate-200 shadow-inner">
-              <Plus size={48} strokeWidth={3} />
+            <div className="w-40 h-40 rounded-[3.5rem] bg-white/50 backdrop-blur-sm flex items-center justify-center text-slate-300 group-hover:bg-white group-hover:text-slate-500 transition-all mb-6 border-4 border-dashed border-slate-200 shadow-inner group-hover:shadow-xl">
+              <Plus size={64} strokeWidth={3} />
             </div>
-            <span className="text-2xl font-bold text-slate-300">New Kid</span>
+            <span className="text-3xl font-bold text-slate-300">New Friend</span>
           </button>
         </div>
 
         <AnimatePresence>
           {showAdd && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-2xl">
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white rounded-[3.5rem] p-10 max-w-lg w-full shadow-2xl relative"
+                initial={{ scale: 0.9, opacity: 0, y: 40 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 40 }}
+                className="bg-white rounded-[4rem] p-12 max-w-lg w-full shadow-[0_32px_64px_rgba(0,0,0,0.2)] relative border-4 border-white"
               >
-                <button onClick={() => setShowAdd(false)} className="absolute top-8 right-8 text-slate-300 hover:text-slate-500">
-                    <X size={32} strokeWidth={3} />
+                <button onClick={() => setShowAdd(false)} className="absolute top-10 right-10 text-slate-300 hover:text-slate-500 transition-colors">
+                    <X size={36} strokeWidth={4} />
                 </button>
 
-                <h2 className="text-4xl font-black text-slate-800 mb-8 mt-4">Welcome aboard! 🎈</h2>
+                <div className="text-center mb-10">
+                    <div className="w-20 h-20 bg-kid-yellow/20 rounded-3xl flex items-center justify-center text-4xl mb-6 mx-auto">🎈</div>
+                    <h2 className="text-5xl font-black text-slate-800 leading-tight">Welcome!</h2>
+                    <p className="text-slate-400 font-bold mt-2">Let's create your profile</p>
+                </div>
                 
-                <div className="space-y-6">
+                <div className="space-y-8">
                   <div>
-                    <label className="block text-left text-xs font-black text-slate-400 uppercase tracking-widest mb-2 px-2">What is your name?</label>
+                    <label className="block text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 px-4">Your Name</label>
                     <input
                       type="text"
                       placeholder="Enter name"
-                      className="w-full px-8 py-5 rounded-3xl bg-slate-50 border-4 border-transparent focus:border-kid-purple/20 focus:bg-white outline-none text-2xl font-black placeholder:text-slate-300 transition-all"
+                      autoFocus
+                      className="w-full px-10 py-6 rounded-[2.5rem] bg-slate-50 border-4 border-transparent focus:border-kid-purple/20 focus:bg-white outline-none text-3xl font-black placeholder:text-slate-300 transition-all shadow-inner"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                     />
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex gap-6">
                     <div className="flex-1">
-                        <label className="block text-left text-xs font-black text-slate-400 uppercase tracking-widest mb-2 px-2">How old are you?</label>
+                        <label className="block text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 px-4">Age</label>
                         <select 
                            value={age}
                            onChange={(e) => setAge(parseInt(e.target.value))}
-                           className="w-full px-6 py-4 rounded-3xl bg-slate-50 border-4 border-transparent focus:border-kid-purple/20 outline-none text-xl font-black transition-all"
+                           className="w-full px-8 py-5 rounded-[2rem] bg-slate-50 border-4 border-transparent focus:border-kid-purple/20 outline-none text-2xl font-black transition-all appearance-none cursor-pointer shadow-inner"
                         >
-                            {[3, 4, 5, 6, 7].map(a => <option key={a} value={a}>{a} years old</option>)}
+                            {[3, 4, 5, 6, 7].map(a => <option key={a} value={a}>{a} Years</option>)}
                         </select>
                     </div>
                     <div className="flex-1">
-                        <label className="block text-left text-xs font-black text-slate-400 uppercase tracking-widest mb-2 px-2">Are you a...</label>
-                        <div className="flex gap-2">
-                           <button onClick={() => setGender('boy')} className={`flex-1 py-4 rounded-[1.5rem] text-2xl transition-all shadow-sm ${gender === 'boy' ? 'bg-kid-blue shadow-lg scale-105' : 'bg-slate-50 opacity-40'}`}>🚗</button>
-                           <button onClick={() => setGender('girl')} className={`flex-1 py-4 rounded-[1.5rem] text-2xl transition-all shadow-sm ${gender === 'girl' ? 'bg-kid-pink shadow-lg scale-105' : 'bg-slate-50 opacity-40'}`}>🦄</button>
+                        <label className="block text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 px-4">Gender</label>
+                        <div className="flex gap-3">
+                           <button onClick={() => setGender('boy')} className={`flex-1 py-5 rounded-[2rem] text-3xl transition-all shadow-sm ${gender === 'boy' ? 'bg-kid-blue shadow-lg scale-110' : 'bg-slate-50 opacity-40 hover:opacity-100'}`}>🚗</button>
+                           <button onClick={() => setGender('girl')} className={`flex-1 py-5 rounded-[2rem] text-3xl transition-all shadow-sm ${gender === 'girl' ? 'bg-kid-pink shadow-lg scale-110' : 'bg-slate-50 opacity-40 hover:opacity-100'}`}>🦄</button>
                         </div>
                     </div>
                   </div>
@@ -220,9 +248,9 @@ const KidSelector = () => {
                           setNewName('');
                         }
                       }}
-                      className="w-full bg-slate-800 text-white py-6 rounded-3xl font-black text-2xl hover:bg-slate-900 transition-all shadow-xl active:scale-95 mt-4"
+                      className="w-full bg-rainbow text-white py-8 rounded-[2.5rem] font-black text-3xl hover:shadow-[0_12px_48px_rgba(0,0,0,0.15)] transition-all active:scale-95 mt-6 shadow-xl border-t-4 border-white/20"
                     >
-                      Start Learning! 🚀
+                      LET'S PLAY! 🚀
                     </button>
                   </div>
                 </motion.div>

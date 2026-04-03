@@ -113,29 +113,29 @@ const Stories: React.FC<Props> = ({ onBack }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 p-6 pt-20 flex flex-col items-center">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b px-6 py-3 flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 glass px-6 py-4 flex items-center justify-between shadow-lg border-b border-white/20">
         <div className="flex items-center gap-4">
-          <button onClick={onBack} className="p-2 hover:bg-slate-100 rounded-full btn-bouncy">
-            <ArrowLeft size={24} />
+          <button onClick={onBack} className="p-3 bg-white/50 hover:bg-white rounded-2xl shadow-sm border border-white/50 btn-bouncy">
+            <ArrowLeft size={24} className="text-slate-600" />
           </button>
           <div className="flex flex-col">
-            <h2 className="text-xl font-black text-slate-800 leading-tight">{currentStory.title}</h2>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Story Mode</span>
+            <h2 className="text-xl font-black text-slate-800 leading-none tracking-tight">{currentStory.title}</h2>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Story Mode • Chapter {storyIdx + 1}</span>
           </div>
         </div>
         <div className="flex items-center gap-3">
-            <div className="bg-slate-100 px-4 py-1.5 rounded-full font-black text-slate-500 text-sm">
+            <div className="bg-slate-200/50 backdrop-blur-sm px-5 py-2.5 rounded-2xl border border-white/50 font-black text-slate-500 text-sm shadow-sm">
                 LEVEL {currentStory.level}
             </div>
-            <div className="bg-kid-blue/10 text-kid-blue px-3 py-1.5 rounded-full font-black text-sm">
+            <div className="bg-kid-blue/10 text-kid-blue border border-kid-blue/20 backdrop-blur-sm px-4 py-2.5 rounded-2xl font-black text-sm shadow-sm">
                 {lineIdx + 1} / {currentStory.lines.length}
             </div>
         </div>
       </header>
 
-      <main className="max-w-4xl w-full mt-8 flex flex-col items-center">
+      <main className="max-w-4xl w-full mt-12 flex flex-col items-center px-4">
         {/* Story Selector */}
-        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 w-full justify-start sm:justify-center no-scrollbar">
+        <div className="flex gap-3 mb-12 overflow-x-auto pb-4 w-full justify-start sm:justify-center no-scrollbar">
             {storiesData.map((s, i) => (
                 <button 
                   key={i}
@@ -145,36 +145,36 @@ const Stories: React.FC<Props> = ({ onBack }) => {
                       setStarsAwarded(null);
                       setFeedback('');
                   }}
-                  className={`px-4 py-2 rounded-2xl font-black whitespace-nowrap transition-all ${storyIdx === i ? 'bg-kid-purple text-white shadow-lg scale-105' : 'bg-white text-slate-400 hover:bg-slate-100'}`}
+                  className={`px-6 py-3 rounded-[1.5rem] font-black whitespace-nowrap transition-all ${storyIdx === i ? 'bg-kid-purple text-white shadow-xl scale-110' : 'bg-white/50 backdrop-blur-sm text-slate-400 hover:bg-white border border-white/50 shadow-sm'}`}
                 >
-                    {s.title}
+                    {s.title.toUpperCase()}
                 </button>
             ))}
         </div>
 
         <motion.div 
           key={`${storyIdx}-${lineIdx}`}
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          className="w-full bg-white rounded-[4rem] p-12 shadow-2xl border-b-8 border-slate-100 flex flex-col items-center text-center relative overflow-hidden"
+          className="w-full glass-card rounded-[4rem] p-16 shadow-2xl relative overflow-hidden"
         >
           {/* Progress Bar */}
-          <div className="absolute top-0 left-0 right-0 h-2 bg-slate-50">
+          <div className="absolute top-0 left-0 right-0 h-2 bg-slate-100/30">
              <motion.div 
                initial={{ width: 0 }}
                animate={{ width: `${((lineIdx + 1) / currentStory.lines.length) * 100}%` }}
-               className="h-full bg-kid-green"
+               className="h-full bg-rainbow"
              />
           </div>
 
-          <div className="mb-12">
-            <p className="text-slate-400 font-bold uppercase tracking-widest mb-6">Listen & Read Aloud</p>
-            <h1 className="text-5xl font-black text-slate-800 leading-[1.4] transition-all">
+          <div className="mb-16">
+            <p className="text-slate-400 font-black uppercase tracking-[0.3em] mb-8 text-[10px]">Listen & Read Aloud</p>
+            <h1 className="text-5xl md:text-6xl font-black text-slate-800 leading-[1.5] transition-all tracking-tight">
               {words.map((word, i) => (
                 <span 
                   key={i} 
-                  className={`inline-block mr-3 transition-all duration-300 rounded-xl px-1 ${
-                    highlightIdx === i ? 'bg-kid-yellow text-slate-900 scale-110 shadow-lg' : 'hover:text-kid-blue'
+                  className={`inline-block mr-4 transition-all duration-300 rounded-2xl px-2 ${
+                    highlightIdx === i ? 'bg-kid-yellow text-slate-900 scale-110 shadow-xl' : 'hover:text-kid-blue'
                   }`}
                 >
                   {word}
@@ -183,49 +183,49 @@ const Stories: React.FC<Props> = ({ onBack }) => {
             </h1>
           </div>
 
-          <div className="flex gap-8 mb-8">
+          <div className="flex gap-10 mb-12 justify-center">
             <button 
               onClick={speak}
               disabled={isListening}
-              className="w-20 h-20 bg-kid-blue text-white rounded-3xl flex items-center justify-center shadow-xl hover:shadow-2xl hover:scale-105 disabled:opacity-50 transition-all btn-bouncy"
+              className="w-24 h-24 bg-kid-blue text-white rounded-[2rem] flex items-center justify-center shadow-xl hover:shadow-2xl hover:scale-110 disabled:opacity-50 transition-all btn-bouncy border-4 border-white/20"
             >
-              <Volume2 size={32} />
+              <Volume2 size={40} strokeWidth={3} />
             </button>
 
             <button 
               onClick={startListening}
               disabled={isListening}
-              className={`w-32 h-32 ${isListening ? 'bg-kid-red animate-pulse' : 'bg-slate-800'} text-white rounded-[2.5rem] flex items-center justify-center shadow-xl hover:shadow-2xl hover:scale-105 transition-all btn-bouncy relative group`}
+              className={`w-36 h-36 ${isListening ? 'bg-kid-red animate-pulse' : 'bg-slate-800'} text-white rounded-[3rem] flex items-center justify-center shadow-2xl hover:scale-110 transition-all btn-bouncy relative group border-4 border-white/20`}
             >
-              <Mic size={48} className={isListening ? 'animate-bounce' : ''} />
-              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs font-black text-slate-500 uppercase tracking-widest">
+              <Mic size={56} className={isListening ? 'animate-bounce' : ''} strokeWidth={3} />
+              <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                 {isListening ? 'I am listening...' : 'Tap to read'}
               </div>
             </button>
           </div>
 
-          <div className="min-h-[140px] flex flex-col items-center justify-center">
+          <div className="min-h-[160px] flex flex-col items-center justify-center">
               <AnimatePresence mode="wait">
                 {feedback && (
                   <motion.div 
                     key={feedback}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.8, opacity: 0 }}
-                    className="flex flex-col items-center gap-3"
+                    initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.8, opacity: 0, y: -20 }}
+                    className="flex flex-col items-center gap-4"
                   >
                     {starsAwarded !== null && (
-                      <div className="flex gap-1 mb-1">
+                      <div className="flex gap-2 mb-2">
                         {[...Array(5)].map((_, i) => (
                           <Star 
                             key={i} 
                             className={`${i < starsAwarded ? 'text-kid-yellow fill-kid-yellow star-glow' : 'text-slate-100'}`} 
-                            size={28} 
+                            size={36} 
                           />
                         ))}
                       </div>
                     )}
-                    <span className={`text-2xl font-black uppercase tracking-widest ${
+                    <span className={`text-3xl font-black uppercase tracking-[0.2em] ${
                       starsAwarded === 5 ? 'text-kid-green' : 
                       starsAwarded === 3 ? 'text-kid-blue' : 'text-kid-red'
                     }`}>
@@ -238,18 +238,18 @@ const Stories: React.FC<Props> = ({ onBack }) => {
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.5 }}
                         onClick={nextLine}
-                        className="mt-4 bg-kid-purple text-white px-10 py-4 rounded-2xl font-black shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2 btn-bouncy"
+                        className="mt-6 bg-rainbow text-white px-12 py-5 rounded-[2rem] font-black shadow-2xl hover:scale-105 transition-all flex items-center gap-3 btn-bouncy border-t-4 border-white/20 text-xl"
                         >
-                        {lineIdx === currentStory.lines.length - 1 ? 'Finish Story' : 'Next Line'} <ChevronRight size={20} />
+                        {lineIdx === currentStory.lines.length - 1 ? 'Finish Story 🎈' : 'Next Line ➔'}
                         </motion.button>
                     )}
 
                     {starsAwarded === 1 && (
                          <button 
                             onClick={startListening}
-                            className="text-slate-400 font-bold hover:text-slate-600 transition-colors flex items-center gap-2 mt-2"
+                            className="bg-white px-8 py-3 rounded-2xl text-slate-400 font-black hover:text-slate-600 transition-all flex items-center gap-2 mt-4 shadow-sm border border-slate-100"
                          >
-                            <RefreshCw size={16} /> Click to try again
+                            <RefreshCw size={18} strokeWidth={3} /> Try Again
                          </button>
                     )}
                   </motion.div>

@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'vite.svg'],
       manifest: {
-        name: 'KidLearn - Fun Learning App',
-        short_name: 'KidLearn',
+        name: 'Grace Early Learning - MAF',
+        short_name: 'GraceLearn',
         description: 'Gamified learning for kids aged 3-10',
         theme_color: '#4D96FF',
         icons: []

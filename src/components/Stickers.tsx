@@ -43,44 +43,44 @@ const Stickers: React.FC<Props> = ({ onBack }) => {
 
   return (
     <div className="min-h-screen bg-slate-50 p-6 pt-20">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b px-6 py-3 flex items-center justify-between shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 glass px-6 py-4 flex items-center justify-between shadow-lg border-b border-white/20">
         <div className="flex items-center gap-4">
-          <button onClick={onBack} className="p-2 hover:bg-slate-100 rounded-full btn-bouncy">
-            <ArrowLeft size={24} />
+          <button onClick={onBack} className="p-3 bg-white/50 hover:bg-white rounded-2xl shadow-sm border border-white/50 btn-bouncy">
+            <ArrowLeft size={24} className="text-slate-600" />
           </button>
           <div className="flex flex-col">
-            <h2 className="text-xl font-black text-slate-800 leading-tight">Sticker Shop</h2>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Collect them all!</span>
+            <h2 className="text-xl font-black text-slate-800 leading-none tracking-tight">Sticker Shop</h2>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Collect & Paint them all!</span>
           </div>
         </div>
-        <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-2 bg-kid-purple/10 px-4 py-2 rounded-2xl border border-kid-purple/20">
+        <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-3 bg-white/50 backdrop-blur-sm px-5 py-2.5 rounded-2xl border border-white/50 shadow-sm">
                 <Trophy className="text-kid-purple" size={20} />
-                <span className="font-black text-kid-purple text-sm">{totalUnlockedCount} Unlocked</span>
+                <span className="font-black text-slate-700 text-sm">{totalUnlockedCount} Unlocked</span>
             </div>
-            <div className="flex items-center gap-2 bg-yellow-50 px-4 py-2 rounded-2xl border border-yellow-200">
+            <div className="flex items-center gap-2 bg-white/50 backdrop-blur-sm px-5 py-2.5 rounded-2xl border border-white/50 shadow-sm">
                 <Star className="text-kid-yellow fill-kid-yellow" size={20} />
-                <span className="font-black text-yellow-700">{currentKid.stars}</span>
+                <span className="font-black text-slate-700">{currentKid.stars}</span>
             </div>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto">
+      <main className="max-w-7xl mx-auto px-4 mt-8">
         {/* Category Tabs */}
-        <div className="flex gap-2 mb-10 overflow-x-auto pb-2 no-scrollbar justify-start md:justify-center">
+        <div className="flex gap-3 mb-12 overflow-x-auto pb-4 no-scrollbar justify-start md:justify-center">
             {categories.map(cat => (
                 <button
                    key={cat.id}
                    onClick={() => setActiveCategory(cat.id)}
-                   className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-black transition-all ${activeCategory === cat.id ? 'bg-slate-800 text-white shadow-lg scale-105' : 'bg-white text-slate-400 hover:bg-slate-100'}`}
+                   className={`flex items-center gap-3 px-8 py-4 rounded-[1.5rem] font-black transition-all ${activeCategory === cat.id ? 'bg-slate-800 text-white shadow-xl scale-110' : 'bg-white/50 backdrop-blur-sm text-slate-400 hover:bg-white hover:text-slate-600 border border-white/50 shadow-sm'}`}
                 >
-                    {cat.icon}
-                    {cat.id}
+                    {React.cloneElement(cat.icon as React.ReactElement<any>, { size: 20, strokeWidth: 3 })}
+                    {cat.id.toUpperCase()}
                 </button>
             ))}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
           {filteredStickers.map((sticker) => {
             const stickerTotalIdx = stickersData.findIndex(s => s.id === sticker.id);
             const isUnlocked = stickerTotalIdx < totalUnlockedCount;
@@ -92,37 +92,38 @@ const Stickers: React.FC<Props> = ({ onBack }) => {
                 layout
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
+                whileHover={isUnlocked ? { scale: 1.05, rotate: [0, -2, 2, 0] } : {}}
                 onClick={() => isUnlocked && setPaintSticker({ id: sticker.id, name: sticker.name })}
-                className={`group relative aspect-square rounded-[2.5rem] flex flex-col items-center justify-center border-b-8 transition-all select-none
+                className={`group relative aspect-square rounded-[3rem] flex flex-col items-center justify-center transition-all select-none
                   ${isUnlocked
-                    ? 'bg-white border-slate-100 shadow-xl cursor-pointer hover:-translate-y-2 hover:shadow-2xl'
-                    : 'bg-slate-200 border-transparent opacity-40 grayscale'
+                    ? 'glass-card cursor-pointer'
+                    : 'bg-slate-200/50 border-4 border-dashed border-slate-300 opacity-60 grayscale'
                   }`}
               >
                 {/* Sticker Emoji */}
-                <span className="text-6xl mb-2 group-hover:scale-125 transition-transform duration-500">
+                <span className={`text-7xl mb-2 transition-all duration-500 ${isUnlocked ? 'group-hover:scale-125 group-hover:rotate-12' : 'opacity-20'}`}>
                   {sticker.emoji}
                 </span>
 
-                <div className="text-center px-2">
+                <div className="text-center px-4 mt-2">
                    {isUnlocked ? (
-                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{sticker.name}</span>
+                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block opacity-0 group-hover:opacity-100 transition-opacity">{sticker.name}</span>
                    ) : (
-                       <div className="flex items-center gap-1 justify-center bg-white/80 px-2 py-1 rounded-full">
-                           <Star size={10} className="fill-kid-yellow text-kid-yellow" />
-                           <span className="text-[10px] font-black text-slate-600">{threshold}</span>
+                       <div className="flex items-center gap-2 justify-center bg-white/50 px-4 py-1.5 rounded-full shadow-inner border border-white/50">
+                           <Star size={12} className="fill-kid-yellow text-kid-yellow" />
+                           <span className="text-sm font-black text-slate-600">{threshold}</span>
                        </div>
                    )}
                 </div>
 
                 {!isUnlocked && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-slate-900/5 rounded-[2.5rem]">
-                        <Lock size={24} className="text-slate-400" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <Lock size={32} className="text-slate-400/50" strokeWidth={3} />
                     </div>
                 )}
 
                 {isUnlocked && (
-                     <div className="absolute -top-2 -right-2 w-10 h-10 bg-kid-purple rounded-full flex items-center justify-center shadow-lg text-white border-4 border-white">
+                     <div className="absolute -top-3 -right-3 w-12 h-12 bg-rainbow rounded-2xl flex items-center justify-center shadow-xl text-white border-4 border-white animate-bounce-slow">
                         🎨
                      </div>
                 )}
@@ -132,8 +133,18 @@ const Stickers: React.FC<Props> = ({ onBack }) => {
         </div>
       </main>
 
-      <footer className="mt-16 text-center">
-          <p className="text-slate-300 font-black uppercase tracking-[0.2em] text-xs">More stickers coming soon in next levels! 🚀</p>
+      <style>{`
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 3s ease-in-out infinite;
+        }
+      `}</style>
+
+      <footer className="mt-20 text-center pb-12">
+          <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px] opacity-50">Discovery Collection • Volume I</p>
       </footer>
     </div>
   );
