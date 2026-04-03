@@ -1,14 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RefreshCw, Star } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 interface Props {
   char: string;
+  image: string;
   langCode: string;
   onComplete: (stars: number) => void;
 }
 
-const TracingCanvas: React.FC<Props> = ({ char, langCode, onComplete }) => {
+const TracingCanvas: React.FC<Props> = ({ char, image, langCode, onComplete }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const guideCanvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -27,7 +28,17 @@ const TracingCanvas: React.FC<Props> = ({ char, langCode, onComplete }) => {
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = 'bold 300px "Inter", sans-serif';
+    
+    // Dynamic Font Scaling
+    let fontSize = 320;
+    ctx.font = `bold ${fontSize}px "Inter", sans-serif`;
+    
+    // Safety check for wide characters (especially in Hindi/Malayalam or lowercase combos)
+    while (ctx.measureText(char).width > canvas.width - 40 && fontSize > 100) {
+      fontSize -= 20;
+      ctx.font = `bold ${fontSize}px "Inter", sans-serif`;
+    }
+
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#F1F5F9'; // slate-100
@@ -174,11 +185,15 @@ const TracingCanvas: React.FC<Props> = ({ char, langCode, onComplete }) => {
               className="flex gap-1"
             >
               {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  size={32} 
-                  className={i < score ? "text-kid-yellow fill-kid-yellow star-glow" : "text-slate-200"} 
-                />
+                <motion.span 
+                  key={i}
+                  initial={{ scale: 0, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className={`text-6xl filter drop-shadow-lg ${i >= score ? 'opacity-20 grayscale' : ''}`}
+                >
+                  {image}
+                </motion.span>
               ))}
             </motion.div>
           )}

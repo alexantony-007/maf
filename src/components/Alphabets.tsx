@@ -151,6 +151,7 @@ const Alphabets: React.FC<Props> = ({ onBack }) => {
                   </div>
                   <TracingCanvas 
                     char={lang === 'English' ? selectedChar.split(' ')[0] : selectedChar} 
+                    image={alphabetsData[lang].find(a => a.char === selectedChar)?.image || '✨'}
                     langCode={getLangCode(lang)} 
                     onComplete={(stars) => {
                       addStars(stars);
