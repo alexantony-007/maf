@@ -4,7 +4,7 @@ import { KidProvider, useKidContext } from './hooks/useKidContext';
 import { 
   BookOpen, Hash, Languages, 
   MessageCircle, Brush, Heart, Star, 
-  Plus, Settings, X, LogOut, User, UserRound
+  Plus, X, LogOut, User, UserRound
 } from 'lucide-react';
 import Alphabets from './components/Alphabets';
 import Words from './components/Words';
@@ -12,9 +12,9 @@ import Pet from './components/Pet';
 import Coloring from './components/Coloring';
 import Stickers from './components/Stickers';
 import Stories from './components/Stories';
+import Numbers from './components/Numbers';
 import GenericLearn from './components/GenericLearn';
 import ParentAuth from './components/ParentAuth';
-import { numbersData } from './data/numbers';
 import { colorsData } from './data/generic';
 import type { Gender } from './types';
 
@@ -42,14 +42,7 @@ const Dashboard = () => {
     if (view === 'coloring') return <Coloring onBack={() => setView('dashboard')} />;
     if (view === 'stickers') return <Stickers onBack={() => setView('dashboard')} />;
     if (view === 'stories') return <Stories onBack={() => setView('dashboard')} />;
-    if (view === 'numbers') return (
-      <GenericLearn 
-        title="Numbers" 
-        items={numbersData.map(n => ({ char: n.value.toString(), phonetic: n.word }))} 
-        colorClass="bg-kid-blue" 
-        onBack={() => setView('dashboard')} 
-      />
-    );
+    if (view === 'numbers') return <Numbers onBack={() => setView('dashboard')} />;
     if (view === 'colors') return <GenericLearn title="Colors" items={colorsData} colorClass="bg-kid-yellow" onBack={() => setView('dashboard')} />;
     return <div onClick={() => setView('dashboard')}>Coming Soon</div>;
   }
