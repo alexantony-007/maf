@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { KidProvider, useKidContext } from './hooks/useKidContext';
+import { useDarkMode } from './hooks/useDarkMode';
 import { 
   BookOpen, Hash, Languages, 
   MessageCircle, Brush, Heart, Star, 
-  Plus, X, LogOut, User, UserRound
+  Plus, X, LogOut, User, UserRound, Sun, Moon
 } from 'lucide-react';
 import Alphabets from './components/Alphabets';
 import Words from './components/Words';
@@ -20,6 +21,7 @@ import type { Gender } from './types';
 
 const Dashboard = () => {
   const { currentKid, parent, logoutParent, selectKid } = useKidContext();
+  const { isDark, toggle: toggleDark } = useDarkMode();
   const [view, setView] = useState<'dashboard' | 'alphabets' | 'numbers' | 'colors' | 'words' | 'stories' | 'coloring' | 'pet' | 'stickers'>('dashboard');
   
   if (!parent) return <ParentAuth />;
@@ -48,7 +50,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-slate-50">
+    <div className="min-h-screen p-4 md:p-8 bg-slate-50 dark:bg-[#0F1117] transition-colors duration-300">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 glass px-6 py-4 flex justify-between items-center shadow-lg border-b border-white/20">
         <div className="flex items-center gap-4">
@@ -67,11 +69,20 @@ const Dashboard = () => {
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-white/50 backdrop-blur-sm px-5 py-2.5 rounded-2xl border border-white/50 shadow-sm transition-all hover:bg-white hover:shadow-md cursor-pointer group">
+          <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm px-5 py-2.5 rounded-2xl border border-white/50 dark:border-white/10 shadow-sm transition-all hover:bg-white dark:hover:bg-slate-700 hover:shadow-md cursor-pointer group">
             <Star className="w-5 h-5 text-kid-yellow fill-kid-yellow star-glow group-hover:scale-125 transition-transform" />
-            <span className="font-black text-xl text-slate-700">{currentKid.stars}</span>
+            <span className="font-black text-xl text-slate-700 dark:text-slate-200">{currentKid.stars}</span>
           </div>
-          <button onClick={logoutParent} className="p-3 text-slate-400 hover:text-red-500 transition-all hover:scale-110 bg-white/50 rounded-2xl border border-white/50 shadow-sm group relative">
+          <motion.button
+            onClick={toggleDark}
+            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.1, rotate: 15 }}
+            className="p-3 bg-white/50 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700 rounded-2xl border border-white/50 dark:border-white/10 shadow-sm text-slate-500 dark:text-slate-300 transition-all"
+            aria-label="Toggle dark mode"
+          >
+            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </motion.button>
+          <button onClick={logoutParent} className="p-3 text-slate-400 hover:text-red-500 transition-all hover:scale-110 bg-white/50 dark:bg-slate-700/50 rounded-2xl border border-white/50 dark:border-white/10 shadow-sm group relative">
             <LogOut className="w-5 h-5" />
             <span className="absolute -bottom-10 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] px-3 py-1.5 rounded-xl font-black uppercase tracking-widest whitespace-nowrap shadow-xl">Exit Parent Portal</span>
           </button>
@@ -112,8 +123,8 @@ const Dashboard = () => {
               </div>
               
               <div className="relative z-10">
-                <h3 className="text-3xl font-black text-slate-800 mb-2 group-hover:tracking-tight transition-all">{module.title}</h3>
-                <p className="text-slate-500 font-bold text-sm tracking-wide leading-relaxed opacity-80">{module.desc}</p>
+                <h3 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-2 group-hover:tracking-tight transition-all">{module.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 font-bold text-sm tracking-wide leading-relaxed opacity-80">{module.desc}</p>
               </div>
               
               {/* Floating Icon Background Decor */}

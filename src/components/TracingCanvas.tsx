@@ -4,12 +4,12 @@ import { RefreshCw } from 'lucide-react';
 
 interface Props {
   char: string;
-  image: string;
+  image?: string;
   langCode: string;
   onComplete: (stars: number) => void;
 }
 
-const TracingCanvas: React.FC<Props> = ({ char, image, langCode, onComplete }) => {
+const TracingCanvas: React.FC<Props> = ({ char, image = '✨', langCode, onComplete }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const guideCanvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
