@@ -21,7 +21,6 @@ import type { Gender } from './types';
 
 const Dashboard = () => {
   const { currentKid, parent, logoutParent, selectKid } = useKidContext();
-  const { isDark, toggle: toggleDark } = useDarkMode();
   const [view, setView] = useState<'dashboard' | 'alphabets' | 'numbers' | 'colors' | 'words' | 'stories' | 'coloring' | 'pet' | 'stickers'>('dashboard');
   
   if (!parent) return <ParentAuth />;
@@ -73,15 +72,6 @@ const Dashboard = () => {
             <Star className="w-5 h-5 text-kid-yellow fill-kid-yellow star-glow group-hover:scale-125 transition-transform" />
             <span className="font-black text-xl text-slate-700 dark:text-slate-200">{currentKid.stars}</span>
           </div>
-          <motion.button
-            onClick={toggleDark}
-            whileTap={{ scale: 0.9 }}
-            whileHover={{ scale: 1.1, rotate: 15 }}
-            className="p-3 bg-white/50 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700 rounded-2xl border border-white/50 dark:border-white/10 shadow-sm text-slate-500 dark:text-slate-300 transition-all"
-            aria-label="Toggle dark mode"
-          >
-            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </motion.button>
           <button onClick={logoutParent} className="p-3 text-slate-400 hover:text-red-500 transition-all hover:scale-110 bg-white/50 dark:bg-slate-700/50 rounded-2xl border border-white/50 dark:border-white/10 shadow-sm group relative">
             <LogOut className="w-5 h-5" />
             <span className="absolute -bottom-10 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] px-3 py-1.5 rounded-xl font-black uppercase tracking-widest whitespace-nowrap shadow-xl">Exit Parent Portal</span>
@@ -284,8 +274,53 @@ const KidSelector = () => {
 }
 
 const App = () => {
+  const { isDark, toggle: toggleDark } = useDarkMode();
+
   return (
     <KidProvider>
+      {/* Floating dark mode toggle — always visible on every screen */}
+      <motion.button
+        onClick={toggleDark}
+        whileTap={{ scale: 0.85 }}
+        whileHover={{ scale: 1.15 }}
+        className="fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-2xl shadow-2xl flex items-center justify-center transition-all duration-300 border-2"
+        style={{
+          background: isDark
+            ? 'linear-gradient(135deg, #1e293b, #334155)'
+            : 'linear-gradient(135deg, #ffffff, #f1f5f9)',
+          borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
+          color: isDark ? '#fbbf24' : '#475569',
+          boxShadow: isDark
+            ? '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)'
+            : '0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)'
+        }}
+        aria-label="Toggle dark mode"
+        id="dark-mode-toggle"
+      >
+        <AnimatePresence mode="wait">
+          {isDark ? (
+            <motion.div
+              key="sun"
+              initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
+              animate={{ rotate: 0, opacity: 1, scale: 1 }}
+              exit={{ rotate: 90, opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Sun size={22} strokeWidth={2.5} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="moon"
+              initial={{ rotate: 90, opacity: 0, scale: 0.5 }}
+              animate={{ rotate: 0, opacity: 1, scale: 1 }}
+              exit={{ rotate: -90, opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Moon size={22} strokeWidth={2.5} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.button>
       <Dashboard />
     </KidProvider>
   );
